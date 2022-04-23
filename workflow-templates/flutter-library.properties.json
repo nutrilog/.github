@@ -1,0 +1,9 @@
+{
+    "name": "Nutrilog Flutter Library Workflow",
+    "description": "Workflow for flutter library projects.",
+    "iconName": "flutter_icon",
+    "categories": [
+        "Continuous integration",
+        "Dart"
+    ]
+}

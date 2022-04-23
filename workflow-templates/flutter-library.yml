@@ -1,0 +1,46 @@
+name: Flutter Library
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The branch, tag or SHA to run the job on.'
+        required: true
+        default: $default-branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: '.'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.ref || '$default-branch' }}
+
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v1
+        with:
+          version: '2.10.4'
+          sdk: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+# excluded until excluding files works
+#      - name: Verify formatting
+#        working-directory: ${{ inputs.working-directory }}
+#        run: flutter format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
